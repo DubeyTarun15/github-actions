@@ -27,3 +27,12 @@ jobs:
         run: npm test
         env:
           MY_SECRET_PASSWORD: ${{ secrets.MY_SECRET_PASSWORD }}
+
+              - name: Generate a build file
+        run: echo "This is my compiled app for Node ${{ matrix.node-version }}" > my_app.txt
+
+      - name: Save file as an Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: my-compiled-app-node-${{ matrix.node-version }}  # Naming it dynamically!
+          path: my_app.txt
