@@ -1,3 +1,3 @@
 test("basic subtraction", () => {
-  expect(5 - 2).toBe(3);
+  expect(5 - 3).toBe(3);
 });
