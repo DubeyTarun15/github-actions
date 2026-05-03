@@ -1,42 +1,15 @@
-# name: CI Pipeline
-
-# on:
-#   push:
-#     branches: [main]
-
-# jobs:
-#   test:
-#     runs on: ubuntu-latest
-#     steps:
-#       -names
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 name: CI Pipeline
-
 on:
   push:
     branches: [ "master" ]
   pull_request:
     branches: [ "master" ]
-
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    strategy:
+      matrix:
+        node-version: ["",18, 20]
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -44,7 +17,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: ${{ matrix.node-version }}
           cache: "npm"
 
       - name: Install dependencies
@@ -52,3 +25,14 @@ jobs:
 
       - name: Run tests
         run: npm test
+        env:
+          MY_SECRET_PASSWORD: ${{ secrets.MY_SECRET_PASSWORD }}
+
+              - name: Generate a build file
+        run: echo "This is my compiled app for Node ${{ matrix.node-version }}" > my_app.txt
+
+      - name: Save file as an Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: my-compiled-app-node-${{ matrix.node-version }}  # Naming it dynamically!
+          path: my_app.txt
